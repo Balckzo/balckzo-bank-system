@@ -1,28 +1,28 @@
-# 🏦 Banco Balckzo
+# 🏦 Balckzo Bank System
 
-Sistema bancário simples feito em **Python** com **MySQL**, rodando no terminal.
+A simple **banking system built with Python and MySQL**, running entirely in the terminal.
 
-O projeto simula operações básicas de um banco real, incluindo criação de contas, autenticação de usuários, movimentações financeiras e histórico de transações.
+This project simulates basic operations of a real bank, including account creation, authentication, financial transactions, and transaction history.
 
-Foi desenvolvido com foco em **aprendizado de backend, banco de dados e organização de código**.
-
----
-
-# 🚀 Funcionalidades
-
-✔ Criar conta
-✔ Login com CPF e senha
-✔ Senhas protegidas com **hash usando bcrypt**
-✔ Depósito de dinheiro
-✔ Saque de dinheiro
-✔ Transferência entre contas
-✔ Visualização de dados da conta
-✔ Extrato das últimas movimentações
-✔ Registro de todas as transações no banco de dados
+It was developed as a **learning project focused on backend development, database integration, and code organization.**
 
 ---
 
-# 🧠 Tecnologias utilizadas
+# 🚀 Features
+
+✔ Account creation
+✔ Login using CPF and password
+✔ Passwords securely stored using **bcrypt hashing**
+✔ Deposit money
+✔ Withdraw money
+✔ Transfer money between accounts
+✔ View account details
+✔ Transaction history (latest operations)
+✔ All transactions recorded in the database
+
+---
+
+# 🧠 Technologies Used
 
 * Python
 * MySQL
@@ -33,106 +33,100 @@ Foi desenvolvido com foco em **aprendizado de backend, banco de dados e organiza
 
 ---
 
-# 🗂 Estrutura do projeto
+# 📂 Project Structure
 
 ```
 balckzo-bank-system/
 
-main.py          # Interface e fluxo do sistema
-banco.py         # Lógica das operações bancárias
+main.py          # CLI interface and application flow
+banco.py         # Banking system logic
 
-database.sql     # Script para criar o banco e tabelas
-requirements.txt # Dependências do projeto
+database.sql     # Database schema
+requirements.txt # Project dependencies
 README.md
 ```
 
 ---
 
-# 🗄 Estrutura do banco de dados
+# 🗄 Database Structure
 
-O sistema utiliza duas tabelas principais.
+The system uses two main tables.
 
-## Usuarios
+## Users
 
-Armazena os dados das contas.
+Stores account information.
 
-Campos:
+Fields:
 
 * id
-* nome
+* name
 * cpf
-* senha (hash bcrypt)
-* saldo
-* criado_em
+* password (bcrypt hash)
+* balance
+* created_at
 
 ---
 
-## Transacoes
+## Transactions
 
-Registra todas as movimentações financeiras.
+Stores all financial operations.
 
-Campos:
+Fields:
 
 * id
-* origem
-* destino
-* valor
-* tipo
-* data
+* origin
+* destination
+* value
+* type
+* date
 
-Tipos de transação:
+Transaction types:
 
-* Depósito
-* Saque
-* Transação (transferência entre contas)
-
----
-
-# 📊 Extrato bancário
-
-O sistema mostra as **8 movimentações mais recentes** da conta.
-
-Cada registro inclui:
-
-* nome de quem enviou
-* nome de quem recebeu
-* valor da transação
-* tipo de operação
-* data e hora
+* Deposit
+* Withdraw
+* Transfer
 
 ---
 
-# ⚙ Como executar o projeto
+# 📊 Transaction History
 
-### 1️⃣ Clonar o repositório
+The system displays the **8 most recent transactions** related to the account.
+
+Each record includes:
+
+* sender name
+* receiver name
+* transaction value
+* transaction type
+* date and time
+
+---
+
+# ⚙ How to Run the Project
+
+### 1️⃣ Clone the repository
 
 ```
-git clone https://github.com/seu-usuario/balckzo-bank-system.git
+git clone https://github.com/YOUR_USERNAME/balckzo-bank-system.git
 ```
 
----
-
-### 2️⃣ Instalar dependências
+### 2️⃣ Install dependencies
 
 ```
 pip install -r requirements.txt
 ```
 
----
+### 3️⃣ Create the database
 
-### 3️⃣ Criar o banco de dados
-
-Execute o script:
+Run the script:
 
 ```
 database.sql
 ```
 
-no MySQL.
+inside MySQL.
 
----
-
-### 4️⃣ Executar o sistema
+### 4️⃣ Run the application
 
 ```
 python main.py
@@ -140,25 +134,25 @@ python main.py
 
 ---
 
-# 🎯 Objetivo do projeto
+# 🎯 Project Goal
 
-Este projeto foi criado para praticar:
+This project was created to practice:
 
-* Python
-* Integração com banco de dados
-* Segurança de senha
-* Estruturação de sistemas
-* Lógica de aplicações backend
-* Transações em banco de dados
-
----
-
-# 📌 Observação
-
-Este projeto é **educacional** e não deve ser usado como sistema bancário real.
+* Python programming
+* Database integration
+* Password security (hashing)
+* Backend application structure
+* Transaction logic
+* Database transactions
 
 ---
 
-# 👨‍💻 Autor
+# ⚠ Disclaimer
 
-Pedro Höhne Miranda 
+This project is **for educational purposes only** and should not be used as a real banking system.
+
+---
+
+# 👨‍💻 Author
+
+Pedro Höhne Miranda
