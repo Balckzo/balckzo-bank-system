@@ -1,4 +1,4 @@
-# 🏦 Balckzo Bank System - ## Version v1.0 - Initial release
+# 🏦 Balckzo Bank System - Version v1.0 - Initial release
 
 A simple **banking system built with Python and MySQL**, running entirely in the terminal.
 
