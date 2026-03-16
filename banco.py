@@ -44,87 +44,78 @@ class Banco:
     def mostrar_conta(self, id):
         query = "SELECT * FROM Usuarios WHERE id = %s"
         self.cursor.execute(query, (id,))
-        resultado = self.cursor.fetchone()
-        id, nome, saldo, cpf, senha, criado_em = resultado
-
-        print("\n" + "="*30)
-        print(f"📌 DETALHES DA CONTA (ID: {id})")
-        print("-"*30)
-        print(f"👤 Nome:  {nome.title()}")
-        print(f"🆔 CPF:   {cpf[:3]}.***.***-{cpf[-2:]}")
-        print(f"💰 Saldo: R$ {saldo:,.2f}")
-        print(f"⏱️ Conta criada em: {criado_em}")
-        print("="*30 + "\n")
+        dados = self.cursor.fetchone()
+        id_u, nome, saldo, cpf, senha ,criado_em = dados
+    # Retornamos um DICIONÁRIO para o main.py saber o que imprimir
+        return {
+            "id": id_u,
+            "nome": nome.title(),
+            "saldo": saldo,
+            "cpf": f"{cpf[:3]}.***.***-{cpf[-2:]}",
+            "criado_em": criado_em
+    }
 
 #--------------------------------------------------------------------------------------    
 
     def obter_extrato(self, meu_id):
-    # Passamos o ID duas vezes para o OR
         query = """
-        SELECT origem, destino, valor, tipo, data 
-        FROM transacoes 
-        WHERE origem = %s OR destino = %s 
-        ORDER BY data DESC 
-        LIMIT 8
-    """
+            SELECT origem, destino, valor, tipo, data 
+            FROM transacoes 
+            WHERE origem = %s OR destino = %s 
+            ORDER BY data DESC LIMIT 8
+        """
         self.cursor.execute(query, (meu_id, meu_id))
-        extrato = self.cursor.fetchall()
+        extrato_bruto = self.cursor.fetchall()
+        
+        if not extrato_bruto:
+            return [] # Retorna lista vazia se não tiver nada
 
-        if not extrato:
-            print("\n--- Nenhuma movimentação encontrada ---")
-            return
+        extrato_limpo = []
 
-        self.console.print(f"\n[bold]=== EXTRATO (Últimas {len(extrato)} transações) ===[/]")
-    
-        for registro in extrato:
+        for registro in extrato_bruto:
             origem, destino, valor, tipo, data = registro
-            print("-" * 40)
-
-            # Lógica para TRANSFERÊNCIAS (Tem origem e destino)
-            if tipo not in ["Depósito", "Saque"]:
-                # Buscamos os nomes de forma segura
-                self.cursor.execute("SELECT id, nome FROM Usuarios WHERE id IN (%s, %s)", (origem, destino))
-                nomes_dict = dict(self.cursor.fetchall()) # Cria um dicionário {id: nome}
             
-                n_origem = nomes_dict.get(origem, "Desconhecido")
-                n_destino = nomes_dict.get(destino, "Desconhecido")
+            # Montamos um "pacotinho" de dados para cada linha
+            item = {
+                "tipo": tipo,
+                "valor": valor,
+                "data": data.strftime('%d/%m/%Y %H:%M'),
+                "detalhe": "" 
+            }
+
+            # Lógica de quem é quem (sem print!)
+            if tipo not in ["Depósito", "Saque"]:
+                self.cursor.execute("SELECT id, nome FROM Usuarios WHERE id IN (%s, %s)", (origem, destino))
+                nomes = dict(self.cursor.fetchall())
+                n_origem = nomes.get(origem, "Desconhecido")
+                n_destino = nomes.get(destino, "Desconhecido")
 
                 if meu_id == origem:
-                    self.console.print(f"[red]SAÍDA:[/] Para {n_destino} (ID: {destino})")
-                    cor_valor = "red"
+                    item["direcao"] = "SAÍDA"
+                    item["detalhe"] = f"Para: {n_destino} (ID: {destino})"
                 else:
-                    self.console.print(f"[green]ENTRADA:[/] De {n_origem} (ID: {origem})")
-                    cor_valor = "green"
-        
-            # Lógica para SAQUE/DEPÓSITO
+                    item["direcao"] = "ENTRADA"
+                    item["detalhe"] = f"De: {n_origem} (ID: {origem})"
             else:
-                if tipo == "Saque":
-                    self.console.print(f"[red]SAQUE EFETUADO[/]")
-                    cor_valor = "red"
-                else:
-                    self.console.print(f"[green]DEPÓSITO RECEBIDO[/]")
-                    cor_valor = "green"
+                item["direcao"] = "SAÍDA" if tipo == "Saque" else "ENTRADA"
+                item["detalhe"] = f"{tipo.upper()} realizado"
 
-            self.console.print(f"VALOR: [{cor_valor}]R$ {valor:,.2f}[/]")
-            self.console.print(f"DATA:  [grey50]{data.strftime('%d/%m/%Y %H:%M')}[/]")
-    
-    print("-" * 40)
+            extrato_limpo.append(item)
 
+        return extrato_limpo
 #--------------------------------------------------------------------------------------    
 
     def depositar(self, id, quantia):
 
         if quantia <= 0:
-            self.console.print("[red]Você não pode adicionar um valor negativo.[/]")
-            time.sleep(2)
+            return False, "Você não pode adicionar uma quantia negativa ou igual a 0."
 
         else:
             query = "UPDATE Usuarios SET saldo = saldo + %s WHERE id = %s"
             self.cursor.execute(query, (quantia, id))
-            self.console.print(f"[green]R$ {quantia:,.2f} depositado com sucesso.[/]")
-            time.sleep(2)
             self.cursor.execute("INSERT INTO Transacoes (origem, valor, tipo) VALUES (%s, %s, %s)", (self.usuario_atual, quantia, "Depósito"))
             self.conexao.commit()
+            return True, f"R$ {quantia:,.2f} depositado com sucesso."
             
 #--------------------------------------------------------------------------------------    
 
@@ -132,20 +123,15 @@ class Banco:
         saldo = self.obter_saldo(id)
 
         if saldo < quantia:
-
-            self.console.print(
-                f"[red]Saldo insuficiente.[/] Saldo atual: R$ {saldo:,.2f}"
-            )
-            time.sleep(2)
-
+                return False, f"Saldo insuficiente. Saldo atual: R$ {saldo:,.2f}"
+            
         else:
 
             query = "UPDATE Usuarios SET saldo = saldo - %s WHERE id = %s"
             self.cursor.execute(query, (quantia, id))
-            self.console.print(f"[green]R$ {quantia:,.2f} sacado com sucesso.[/]")
             self.cursor.execute("INSERT INTO Transacoes (origem, valor, tipo) VALUES (%s, %s, %s)", (self.usuario_atual, quantia, "Saque"))
             self.conexao.commit()
-            time.sleep(2)
+            return True, f"Saque de R$ {quantia:,.2f} realizado com sucesso!"
 
 #--------------------------------------------------------------------------------------    
 
@@ -163,20 +149,12 @@ class Banco:
             destinatario = self.cursor.fetchone()
 
             if destinatario is None:
-
-                self.console.print("[red]Usuário destino não existe.[/]")
                 self.conexao.rollback()
-                time.sleep(2)
-                return
+                return False, "Usuário destino não existe."
 
             elif valor1 < quantia:
-
-                self.console.print(
-                    f"[red]Saldo insuficiente.[/] Saldo: R$ {valor1:,.2f}"
-                )
                 self.conexao.rollback()
-                time.sleep(2)
-                return
+                return False, f"Saldo insuficiente. Saldo: R$ {valor1:,.2f}"
 
             else:
 
@@ -190,22 +168,15 @@ class Banco:
                     (quantia, destino)
                 )
 
-                self.cursor.execute("INSERT INTO Transacoes (origem, destino, valor, tipo) VALUES (%s, %s, %s, %s)", (self.usuario_atual, destino, quantia, "Transação"))
+                self.cursor.execute("INSERT INTO Transacoes (origem, destino, valor, tipo) VALUES (%s, %s, %s, %s)", (origem, destino, quantia, "Transação"))
                 self.conexao.commit()
 
-                self.console.print(
-                    f"[green]Transferência concluída.[/]\n"
-                    f"ID origem:{origem}\n"
-                    f"ID destino:{destino}\n"
-                    f"Valor: R$ {quantia:,.2f}"
-                )
-
-                time.sleep(2)
-
+                return True, f"Transferência concluída.\n ID origem:{origem}\nID destino:{destino}\nValor: R$ {quantia:,.2f}"
+            
         except Exception as erro:
 
             self.conexao.rollback()
-            self.console.print(f"[red]Erro:[/] {erro}")
+            return False, f"Erro: {erro}"
             
 #--------------------------------------------------------------------------------------                
 

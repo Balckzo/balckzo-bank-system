@@ -136,95 +136,90 @@ Selecione:""")
         decisao = "7"
 
     if decisao == "1":
-
-        deposito_quebra = False
-
-        while deposito_quebra != True:
-
-            try:
-                valor = int(input("Insira o valor que será depositado:"))
-
-            except ValueError:
-
-                console.print("Você colocou alguma [red]letra[/].")
-                time.sleep(1)
-
+        try:
+            valor_deposito = float(console.input("Valor do saque: R$"))
+            
+            sucesso, mensagem = banco.depositar(banco.usuario_atual, valor_deposito)
+            
+            if sucesso:
+                    console.print(f"[green]✅ {mensagem}[/]")
             else:
-
-                banco.depositar(banco.usuario_atual, valor)
-
-                deposito_quebra = True
-                break
+                console.print(f"[bold red]❌ FALHA NA OPERAÇÃO:[/] {mensagem}")
+                
+        except ValueError:
+            console.print("[red]Entrada inválida. Use apenas números.[/]")
+    
+        time.sleep(2)
+        
 
     if decisao == "2":
-
-        saque_quebra = False
-
-        while saque_quebra != True:
-
-            try:
-
-                valor = int(input("Insira o valor que será sacado:"))
-
-            except ValueError:
-
-                console.print("Você colocou alguma [red]letra[/].")
-                time.sleep(1)
-
+        try:
+            valor_saque = float(console.input("Valor do saque: R$"))
+            
+            sucesso, mensagem = banco.sacar(banco.usuario_atual, valor_saque)
+            
+            if sucesso:
+                    console.print(f"[green]✅ {mensagem}[/]")
             else:
-
-                banco.sacar(banco.usuario_atual, valor)
-
-                saque_quebra = True
-                break
+                console.print(f"[bold red]❌ FALHA NA OPERAÇÃO:[/] {mensagem}")
+                
+        except ValueError:
+            console.print("[red]Entrada inválida. Use apenas números.[/]")
+    
+        time.sleep(2)
 
     if decisao == "3":
 
-        trans_quebra = False
-
-        while trans_quebra != True:
-
-            id = console.input("Insira o ID destinatário:")
-
-            if any(char.isalpha() for char in id):
-
-                console.print("Você colocou alguma [red]letra[/].")
-                time.sleep(1)
-
+        try:
+            id_dest = int(console.input("ID do destinatário: "))
+            valor_trans = float(console.input("Valor da transferência: R$"))
+        
+            # Chama a função e recebe a "tupla" (True/False, Mensagem)
+            sucesso, mensagem = banco.transferir(banco.usuario_atual, id_dest, valor_trans)
+        
+            if sucesso:
+                console.print(f"[green]✅ {mensagem}[/]")
             else:
-
-                idint = int(id)
-
-                while True:
-
-                    try:
-
-                        valor = int(input("Insira o valor que será transferido:"))
-
-                    except ValueError:
-
-                        console.print("Você colocou alguma [red]letra[/].")
-                        time.sleep(1)
-
-                    else:
-
-                        banco.transferir(banco.usuario_atual, idint, valor)
-
-                        trans_quebra = True
-                        break
+                console.print(f"[bold red]❌ FALHA NA OPERAÇÃO:[/] {mensagem}")
+            
+        except ValueError:
+            console.print("[red]Entrada inválida. Use apenas números.[/]")
+    
+        time.sleep(2)
 
     if decisao == "4":
 
-        mostrar_quebra = False
+        dados = banco.mostrar_conta(banco.usuario_atual)
 
-        while mostrar_quebra != True:
-
-            banco.mostrar_conta(banco.usuario_atual)
-
-            mostrar_quebra = True
+        if dados:
+            print("\n" + "="*30)
+            console.print(f"📌 [bold]DETALHES DA CONTA (ID: {dados['id']})[/]")
+            print("-" * 30)
+            print(f"👤 Nome:  {dados['nome']}")
+            print(f"🆔 CPF:   {dados['cpf']}")
+            console.print(f"💰 Saldo: [green]R$ {dados['saldo']:,.2f}[/]")
+            print(f"⏱️ Criada em: {dados['criado_em']}")
+            print("="*30 + "\n")
 
             console.input("Aperte enter para voltar:")
             
     if decisao == "5":
-        banco.obter_extrato(banco.usuario_atual)
-        input("\nPressione Enter para continuar...")
+        movimentacoes = banco.obter_extrato(banco.usuario_atual)
+
+        if not movimentacoes:
+            console.print("\n[yellow]⚠ Nenhuma movimentação encontrada.[/]")
+        else:
+            console.print(f"\n[bold magenta]=== EXTRATO RECENTE ===[/]")
+            
+            for m in movimentacoes:
+                # A cor depende da direção que o banco calculou
+                cor = "red" if m["direcao"] == "SAÍDA" else "green"
+                
+                print("-" * 40)
+                console.print(f"[{cor}][{m['direcao']}][/] {m['detalhe']}")
+                console.print(f"VALOR: [bold {cor}]R$ {m['valor']:,.2f}[/]")
+                console.print(f"DATA:  [grey50]{m['data']}[/]")
+            
+            print("-" * 40)
+        
+        console.input("\n[cyan]Pressione ENTER para voltar...[/]")
