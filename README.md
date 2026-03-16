@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # 🏦 Balckzo Bank System
+=======
+# 🏦 Balckzo Bank System - Version v1.0 - Initial release
+>>>>>>> 04d24065c9c51a75c5f43b429f8693dfc99bd833
 
 A simple **banking system built with Python and MySQL**, running entirely in the terminal.
 
