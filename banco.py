@@ -57,7 +57,6 @@ class Banco:
         self.cursor.execute(query, (id,))
         dados = self.cursor.fetchone()
         id_u, nome, saldo, cpf, senha ,criado_em = dados
-    # Retornamos um DICIONÁRIO para o main.py saber o que imprimir
         return {
             "id": id_u,
             "nome": nome.title(),
@@ -86,7 +85,6 @@ class Banco:
         for registro in extrato_bruto:
             origem, destino, valor, tipo, data = registro
             
-            # Montamos um "pacotinho" de dados para cada linha
             item = {
                 "tipo": tipo,
                 "valor": valor,
@@ -94,7 +92,6 @@ class Banco:
                 "detalhe": "" 
             }
 
-            # Lógica de quem é quem (sem print!)
             if tipo not in ["Depósito", "Saque"]:
                 self.cursor.execute("SELECT id, nome FROM Usuarios WHERE id IN (%s, %s)", (origem, destino))
                 nomes = dict(self.cursor.fetchall())

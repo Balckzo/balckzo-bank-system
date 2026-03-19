@@ -16,12 +16,11 @@ def get_db():
         database=os.getenv("DB_NAME")
     )
     
-os.getenv("FLASK_KEY") = "Balckzo"
+app.secret_key = os.getenv("FLASK_KEY", "Balckzo_Padrao_Seguro")
 
-# Rota principal (Home)
+
 @app.route('/')
 def index():
-    # Isso vai procurar o arquivo index.html dentro da pasta /templates
     return render_template("index.html")
 
  #--------------------------------------------------------
@@ -78,7 +77,6 @@ def painel():
     if 'usuario_id' not in session:
         return redirect(url_for('login'))
 
-    # 2. Busca os dados desse usuário para o template não dar erro
     conexao = get_db()
     cursor = conexao.cursor(dictionary=True)
     cursor.execute("SELECT id, nome, cpf, saldo, criado_em FROM Usuarios WHERE id = %s", (session['usuario_id'],))
