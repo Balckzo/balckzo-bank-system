@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Balckzo® - Painel</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #000; color: white; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .header { border-bottom: 2px solid #ff00ff; padding-bottom: 10px; margin-bottom: 20px; width: 100%; max-width: 500px; text-align: center; }
+        .cyan { color: #00ffff; }
+        .magenta { color: #ff00ff; }
+        .green { color: #00ff00; }
+        
+        /* Container das mensagens Flash */
+        .flash-container { width: 100%; max-width: 500px; margin-bottom: 20px; }
+        .alert {
+            padding: 15px; 
+            border: 1px solid; 
+            border-radius: 5px; 
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+            background: #111;
+        }
+
+        .card { 
+            background: #111; 
+            border: 1px solid #333; 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        .menu-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            width: 100%; 
+            max-width: 500px; 
+        }
+        .btn {
+            background: #222;
+            color: #00ffff;
+            border: 1px solid #00ffff;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn:hover { background: #00ffff; color: #000; box-shadow: 0 0 15px #00ffff; }
+        .btn-exit { border-color: #ff00ff; color: #ff00ff; }
+        .btn-exit:hover { background: #ff00ff; color: #000; box-shadow: 0 0 15px #ff00ff; }
+    </style>
+</head>
+<body>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+            <div class="alert" style="
+                color: {{ '#00ffff' if category == 'success' else '#ff00ff' }};
+                border-color: {{ '#00ffff' if category == 'success' else '#ff00ff' }};
+                box-shadow: 0 0 10px {{ '#00ffff' if category == 'success' else '#ff00ff' }};
+            ">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="header">
+        <h1><span class="cyan">Banco</span> - <span class="magenta">Balckzo®</span></h1>
+        <p>Bem-vindo, <strong>{{ usuario.nome }}</strong></p>
+    </div>
+
+    <div class="card">
+        <h3 class="cyan">📌 DETALHES DA CONTA (ID: {{ usuario.id }})</h3>
+        <hr style="border: 0; border-top: 1px solid #333; margin: 15px 0;">
+        <p>🆔 CPF: {{ usuario.cpf }}</p>
+        <p>💰 Saldo: <span class="green">R$ {{ "%.2f"|format(usuario.saldo) }}</span></p>
+        <p><small style="color: #666;">⏱️ Criada em: {{ usuario.criado_em }}</small></p>
+    </div>
+
+    <div class="menu-grid">
+        <a href="/depositar" class="btn">1 - Depositar</a>
+        <a href="/sacar" class="btn">2 - Sacar</a>
+        <a href="/transferir" class="btn">3 - Transferência</a>
+        <a href="/extrato" class="btn">4 - Mostrar Extrato</a>
+        <a href="/logout" class="btn btn-exit">5 - Encerrar Sessão</a>
+    </div>
+
+</body>
+</html>

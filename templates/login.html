@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Banco Balckzo® - Login</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #000; color: white; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
+        .header { border-bottom: 2px solid #ff00ff; padding-bottom: 10px; margin-bottom: 20px; text-align: center; width: 100%; max-width: 400px; }
+        .cyan { color: #00ffff; }
+        .magenta { color: #ff00ff; }
+        
+        .card { 
+            background: #111; 
+            border: 1px solid #333; 
+            padding: 25px; 
+            border-radius: 8px; 
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 { text-align: center; margin-top: 0; }
+
+        label { color: #ccc; font-weight: bold; }
+        
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 5px;
+            box-sizing: border-box; /* Garante que o padding não aumente a largura */
+        }
+        input[type="text"]:focus, input[type="password"]:focus {
+            border-color: #00ffff;
+            outline: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: #00ffff;
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        .btn-submit:hover { background: #00cccc; }
+
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #ff00ff; text-decoration: none; font-size: 0.9em; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1><span class="cyan">Banco</span> <span class="magenta">Balckzo®</span></h1>
+    </div>
+
+    <div class="card">
+        <h2>🔐 <span class="cyan">Acesso ao Cliente</span></h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div style="padding: 12px; border: 1px solid #ff00ff; border-radius: 5px; margin-bottom: 20px; text-align: center; color: #ff00ff; background: #111; box-shadow: 0 0 10px #ff00ff; font-weight: bold; font-size: 0.9em;">
+                ⚠️ {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        <form action="/login" method="POST">
+            <label>CPF (Apenas números):</label><br>
+            <input type="text" name="cpf" maxlength="11" required placeholder="00000000000">
+            
+            <label>Senha:</label><br>
+            <input type="password" name="senha" required>
+            
+            <button type="submit" class="btn-submit">Entrar</button>
+        </form>
+        
+        <a href="/" class="back-link">Voltar para o início</a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Balckzo® - Histórico</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #000; color: white; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
+        .header { border-bottom: 2px solid #ff00ff; padding-bottom: 10px; margin-bottom: 20px; text-align: center; width: 100%; max-width: 600px; }
+        .cyan { color: #00ffff; }
+        .magenta { color: #ff00ff; }
+        .green { color: #00ff00; }
+        
+        .card-extrato { background: #111; border: 1px solid #333; padding: 25px; border-radius: 8px; width: 100%; max-width: 600px; box-sizing: border-box; box-shadow: 0 0 15px #222; }
+
+        /* Estilo da Tabela */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9em; }
+        th { border-bottom: 2px solid #333; color: #ff00ff; padding: 12px; text-align: left; text-transform: uppercase; }
+        tr { border-bottom: 1px solid #222; }
+        tr:last-child { border-bottom: none; }
+        td { padding: 15px; color: #ccc; }
+
+        /* CoresNeon para Direção e Tipo */
+        .entrada { color: #00ffff !important; font-weight: bold; }
+        .saida { color: #ff00ff !important; font-weight: bold; }
+        
+        .valor-entrada { color: #00ff00 !important; font-weight: bold; }
+        .valor-saida { color: #ff00ff !important; font-weight: bold; }
+
+        .detalhe { color: #888; font-size: 0.8em; margin-top: 2px; }
+        .back-link { display: block; text-align: center; margin-top: 25px; color: #00ffff; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .back-link:hover { color: white; text-shadow: 0 0 5px #00ffff; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>📜 <span class="cyan">Histórico</span> Recente</h1>
+    </div>
+
+    <div class="card-extrato">
+        {% if transacoes %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fluxo</th>
+                        <th>Tipo / Detalhe</th>
+                        <th>Valor / Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in transacoes %}
+                    <tr>
+                        <td class="{{ 'entrada' if t.direcao == 'ENTRADA' else 'saida' }}">
+                            {{ t.direcao }}
+                        </td>
+
+                        <td>
+                            <div>{{ t.tipo }}</div>
+                            <div class="detalhe">{{ t.detalhe }}</div>
+                        </td>
+
+                        <td>
+                            <div class="{{ 'valor-entrada' if t.direcao == 'ENTRADA' else 'valor-saida' }}">
+                                {{ '+' if t.direcao == 'ENTRADA' else '-' }} R$ {{ "%.2f"|format(t.valor) }}
+                            </div>
+                            <div class="detalhe">{{ t.data }}</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 30px; color: #555;">
+                <h3 class="magenta">∅ Nenhuma transação registrada.</h3>
+                <p>O sistema ainda não tem movimentações na sua conta.</p>
+            </div>
+        {% endif %}
+
+        <a href="/painel" class="back-link">Voltar ao Painel</a>
+    </div>
+
+</body>
+</html>

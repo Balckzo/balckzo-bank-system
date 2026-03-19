@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Banco Balckzo® - Home</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #000; color: white; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
+        .header { border-bottom: 2px solid #ff00ff; padding-bottom: 10px; margin-bottom: 30px; text-align: center; width: 100%; max-width: 400px; }
+        .cyan { color: #00ffff; }
+        .magenta { color: #ff00ff; }
+        
+        .welcome-text { text-align: center; margin-bottom: 30px; color: #ccc; }
+
+        .menu-grid { display: grid; grid-template-columns: 1fr; gap: 15px; width: 100%; max-width: 400px; }
+        .btn {
+            background: #111;
+            color: #00ffff;
+            border: 1px solid #00ffff;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1em;
+            display: block; /* Garante que o link preencha o botão */
+        }
+        .btn:hover { background: #00ffff; color: #000; }
+        
+        /* Remove o estilo padrão do link que envolve o botão */
+        .menu-grid a { text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🏦 <span class="cyan">Banco</span> <span class="magenta">Balckzo®</span></h1>
+    </div>
+
+    <div class="welcome-text">
+        <p>Seja bem-vindo ao seu sistema bancário digital.</p>
+        <h3>O que deseja fazer hoje?</h3>
+    </div>
+
+    <div class="menu-grid">
+        <a href="/login"><button class="btn">Acessar Minha Conta</button></a>
+        <a href="/cadastro"><button class="btn">Abrir Conta Grátis</button></a>
+    </div>
+
+</body>
+</html>

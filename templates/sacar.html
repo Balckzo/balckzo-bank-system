@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Balckzo® - Saque</title>
+    <style>
+        /* ... Estilos similares ao anterior ... */
+        body { font-family: 'Segoe UI', sans-serif; background-color: #000; color: white; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
+        .header { border-bottom: 2px solid #ff00ff; padding-bottom: 10px; margin-bottom: 20px; text-align: center; width: 100%; max-width: 400px; }
+        .magenta { color: #ff00ff; }
+        .card { background: #111; border: 1px solid #333; padding: 25px; border-radius: 8px; width: 100%; max-width: 400px; }
+        label { color: #ccc; font-weight: bold; display: block; margin-bottom: 10px; }
+        input[type="number"] { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #ff00ff; border-radius: 5px; font-size: 1.2em; box-sizing: border-box; margin-bottom: 20px; }
+        .btn-submit { width: 100%; background: #ff00ff; color: #000; border: none; padding: 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .btn-submit:hover { background: #cc00cc; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #00ffff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💸 <span class="magenta">Realizar</span> Saque</h1>
+    </div>
+    <div class="card">
+        <form action="/sacar" method="POST">
+            <label>Valor do Saque (R$):</label>
+            <input type="number" name="valor" step="0.01" min="0.01" required>
+            <button type="submit" class="btn-submit">Confirmar Saque</button>
+        </form>
+        <a href="/painel" class="back-link">Voltar ao Painel</a>
+    </div>
+</body>
+</html>

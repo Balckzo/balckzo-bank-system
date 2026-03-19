@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Balckzo® - Depósito</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #000; color: white; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
+        .header { border-bottom: 2px solid #00ffff; padding-bottom: 10px; margin-bottom: 20px; text-align: center; width: 100%; max-width: 400px; }
+        .cyan { color: #00ffff; }
+        .green { color: #00ff00; }
+        .card { background: #111; border: 1px solid #333; padding: 25px; border-radius: 8px; width: 100%; max-width: 400px; }
+        label { color: #ccc; font-weight: bold; display: block; margin-bottom: 10px; }
+        input[type="number"] { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #00ff00; border-radius: 5px; font-size: 1.2em; box-sizing: border-box; margin-bottom: 20px; }
+        input:focus { border-color: #00ffff; outline: none; }
+        .btn-submit { width: 100%; background: #00ffff; color: #000; border: none; padding: 15px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 1.1em; }
+        .btn-submit:hover { background: #00cccc; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #ff00ff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💵 <span class="cyan">Efetuar</span> <span class="green">Depósito</span></h1>
+    </div>
+    <div class="card">
+        <form action="/depositar" method="POST">
+            <label>Quanto deseja depositar? (R$)</label>
+            <input type="number" name="valor" step="0.01" min="0.01" required placeholder="0.00">
+            <button type="submit" class="btn-submit">Confirmar Depósito</button>
+        </form>
+        <a href="/painel" class="back-link">Cancelar e Voltar</a>
+    </div>
+</body>
+</html>s
